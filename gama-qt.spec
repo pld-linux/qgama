@@ -1,16 +1,16 @@
 Summary:	Qt based GUI for GNU Gama project
 Summary(pl.UTF-8):	Oparty na Qt graficzny interfejs do projektu GNU Gama
 Name:		gama-qt
-Version:	1.02
+Version:	1.03
 %define	fver	%(echo %{version} | tr . -)
-%define	gama_ver	2.09
+%define	gama_ver	2.13
 Release:	1
 License:	GPL v3+
 Group:		Applications/Science
 Source0:	https://ftp.gnu.org/gnu/gama/gama-qt/qt-gama-qt-%{fver}.tar.gz
-# Source0-md5:	8f34ab7af1845efcfc97b7f8ced4c081
+# Source0-md5:	0bc18d72824037717582a75863965f66
 Source1:	https://ftp.gnu.org/gnu/gama/gama-%{gama_ver}.tar.gz
-# Source1-md5:	87a3ce7c19bb475b7a70f4bae7c4be61
+# Source1-md5:	bc0f6c70c10bd14663c7033d0a10085b
 Patch0:		%{name}-system-expat.patch
 URL:		http://www.gnu.org/software/gama/
 BuildRequires:	Qt5Core-devel >= 5

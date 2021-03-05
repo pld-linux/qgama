@@ -16,17 +16,17 @@
 +target_link_libraries(gama-q2 PRIVATE Qt5::Widgets Qt5::Sql Qt5::Svg  Qt5::PrintSupport expat)
  
  add_subdirectory(gama)
---- qt-gama-qt-1-02/gama/CMakeLists.txt.orig	2020-06-28 19:38:30.000000000 +0200
-+++ qt-gama-qt-1-02/gama/CMakeLists.txt	2020-12-06 06:32:31.737283954 +0100
+--- qt-gama-qt-1-03/gama-2.13/CMakeLists.txt.orig	2021-01-12 17:34:01.000000000 +0100
++++ qt-gama-qt-1-03/gama-2.13/CMakeLists.txt	2021-03-05 17:47:27.810728864 +0100
 @@ -5,7 +5,6 @@
- set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CXX_STANDARD 17)
  set(CMAKE_CXX_STANDARD_REQUIRED ON)
  
 -add_definitions(-DGNU_gama_expat_1_1)
  #add_definitions(-DDEBUG_ACORD2)
  #add_definitions(-DA2G_DEBUG)
  
-@@ -223,21 +222,16 @@
+@@ -223,14 +222,6 @@
     lib/matvec/vec.h
  )
  
@@ -38,6 +38,13 @@
 -   lib/expat/xmlparse/hashtable.c
 -)
 -
+ set(SRC_YAMLCPP
+   lib/yaml-cpp/src/binary.cpp
+   lib/yaml-cpp/src/collectionstack.h
+@@ -284,16 +275,20 @@
+   lib/yaml-cpp/src/token.h
+   )
+ 
 -include_directories(lib lib/expat/xmlparse lib/expat/xmltok)
 +include_directories(lib)
  
@@ -46,60 +53,79 @@
 +target_link_libraries(libgama expat)
  
  # Binaries
- add_executable(gama-local bin/gama-local.cpp $<TARGET_OBJECTS:libgama>)
-+target_link_libraries(gama-local expat)
- add_executable(gama-g3 bin/gama-g3.cpp $<TARGET_OBJECTS:libgama>)
-+target_link_libraries(gama-g3 expat)
+-add_executable(gama-local bin/gama-local.cpp $<TARGET_OBJECTS:libgama>)
+-add_executable(gama-g3 bin/gama-g3.cpp $<TARGET_OBJECTS:libgama>)
++add_executable(gama-local bin/gama-local.cpp)
++target_link_libraries(gama-local libgama)
++add_executable(gama-g3 bin/gama-g3.cpp)
++target_link_libraries(gama-g3 libgama)
  
- # Installation
- install(TARGETS gama-local gama-g3 DESTINATION bin)
---- qt-gama-qt-1-02/gama/tests/gama-local/CMakeLists.txt.orig	2020-01-14 17:43:38.000000000 +0100
-+++ qt-gama-qt-1-02/gama/tests/gama-local/CMakeLists.txt	2020-12-06 06:51:24.374481265 +0100
-@@ -40,6 +40,7 @@
+ add_executable(gama-local-gkf2yaml bin/gama-local-gkf2yaml.cpp
+-               lib/gnu_gama/local/gkf2yaml.cpp $<TARGET_OBJECTS:libgama>)
++               lib/gnu_gama/local/gkf2yaml.cpp)
++target_link_libraries(gama-local-gkf2yaml libgama)
+ 
+ if (EXISTS ${CMAKE_SOURCE_DIR}/lib/yaml-cpp)
+    include_directories(lib/yaml-cpp/include)
+--- qt-gama-qt-1-03/gama/tests/gama-local/CMakeLists.txt.orig	2020-12-28 15:47:59.000000000 +0100
++++ qt-gama-qt-1-03/gama/tests/gama-local/CMakeLists.txt	2021-03-05 18:02:49.479069092 +0100
+@@ -40,7 +40,8 @@
+ # check version
  #
- add_executable(check_version scripts/check_version.cpp
-   $<TARGET_OBJECTS:libgama>)
-+target_link_libraries(check_version expat)
+ add_executable(check_version src/check_version.cpp
+-  $<TARGET_OBJECTS:libgama>)
++)
++target_link_libraries(check_version libgama)
  add_test(NAME check_version COMMAND check_version
    ${PROJECT_SOURCE_DIR}/configure.ac ${PROJECT_SOURCE_DIR}/CMakeLists.txt)
  
-@@ -73,6 +74,7 @@
+@@ -74,7 +74,8 @@
+ # check_algorithms
  #
- add_executable(check_algorithms scripts/check_xyz.h scripts/check_xyz.cpp
-   scripts/check_algorithms.cpp $<TARGET_OBJECTS:libgama>)
-+target_link_libraries(check_algorithms expat)
+ add_executable(check_algorithms src/check_xyz.h src/check_xyz.cpp
+-  src/check_algorithms.cpp $<TARGET_OBJECTS:libgama>)
++  src/check_algorithms.cpp)
++target_link_libraries(check_algorithms libgama)
  
  foreach(test ${INPUT_FILES})
    add_test(NAME check_algorithms_${test}
-@@ -89,6 +91,7 @@
- add_executable(check_xml_xml scripts/check_xml_xml.cpp
-   scripts/compare_xml_adjustment.h scripts/compare_xml_adjustment.cpp
-   $<TARGET_OBJECTS:libgama>)
-+target_link_libraries(check_xml_xml expat)
+@@ -91,7 +91,8 @@
+ #
+ add_executable(check_xml_xml src/check_xml_xml.cpp
+   src/compare_xml_adjustment.h src/compare_xml_adjustment.cpp
+-  $<TARGET_OBJECTS:libgama>)
++)
++target_link_libraries(check_xml_xml libgama)
  
  set(RES ${RESULT_DIR}/gama-local-adjustment)
  
-@@ -113,6 +116,7 @@
- add_executable(check_equivalents scripts/check_xyz.h
-   scripts/check_xyz.cpp scripts/check_equivalents.cpp
-   $<TARGET_OBJECTS:libgama>)
-+target_link_libraries(check_equivalents expat)
+@@ -116,7 +116,8 @@
+ #
+ add_executable(check_equivalents src/check_xyz.h
+   src/check_xyz.cpp src/check_equivalents.cpp
+-  $<TARGET_OBJECTS:libgama>)
++)
++target_link_libraries(check_equivalents libgama)
  
  set(EQUIVALENTS_TESTS
      # CMake is weird with 2D arrays, so we apply this hack
-@@ -145,6 +149,7 @@
+@@ -149,7 +149,8 @@
+ # check_xml_results
  #
- add_executable(check_xml_results  scripts/check_xml_results.cpp
-   scripts/check_xyz.h scripts/check_xyz.cpp $<TARGET_OBJECTS:libgama>)
-+target_link_libraries(check_xml_results expat)
+ add_executable(check_xml_results  src/check_xml_results.cpp
+-  src/check_xyz.h src/check_xyz.cpp $<TARGET_OBJECTS:libgama>)
++  src/check_xyz.h src/check_xyz.cpp)
++target_link_libraries(check_xml_results libgama)
  foreach(test ${INPUT_FILES})
    add_test(
      NAME check_xml_results_${test}
-@@ -161,6 +166,7 @@
+@@ -166,7 +166,8 @@
+ # check externs
  #
- add_executable(check_externs scripts/check_externs.cpp
-   $<TARGET_OBJECTS:libgama>)
-+target_link_libraries(check_externs expat)
+ add_executable(check_externs src/check_externs.cpp
+-  $<TARGET_OBJECTS:libgama>)
++)
++target_link_libraries(check_externs libgama)
  add_test(NAME check_externs COMMAND check_externs
    ${INPUT_DIR} ${RESULT_DIR}/gama-local-adjustment ${INPUT_FILES})
  
