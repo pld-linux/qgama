@@ -1,14 +1,14 @@
---- qt-gama-qt-1-02/CMakeLists.txt.orig	2020-06-27 14:59:28.000000000 +0200
-+++ qt-gama-qt-1-02/CMakeLists.txt	2020-12-05 21:41:09.470005020 +0100
-@@ -29,7 +29,6 @@
- #    endif()
+--- qt-gama-qt-1-03/CMakeLists.txt.orig	2021-01-17 12:19:55.000000000 +0100
++++ qt-gama-qt-1-03/CMakeLists.txt	2021-03-05 20:50:53.175869592 +0100
+@@ -39,7 +39,6 @@
  #endif()
+ 
  
 -add_definitions(-DGNU_gama_expat_1_1)  # if we use local copy of expat sources
  include_directories(gama/lib gama-q2)
  
  find_package(Qt5 COMPONENTS Core Gui Svg Sql Widgets PrintSupport REQUIRED)
-@@ -101,6 +100,6 @@
+@@ -113,6 +112,6 @@
    )
  endif()
  
