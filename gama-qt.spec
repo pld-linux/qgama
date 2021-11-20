@@ -4,7 +4,7 @@ Name:		gama-qt
 Version:	1.03
 %define	fver	%(echo %{version} | tr . -)
 %define	gama_ver	2.13
-Release:	1
+Release:	2
 License:	GPL v3+
 Group:		Applications/Science
 Source0:	https://ftp.gnu.org/gnu/gama/gama-qt/qt-gama-qt-%{fver}.tar.gz
