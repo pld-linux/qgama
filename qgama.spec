@@ -1,31 +1,30 @@
 Summary:	Qt based GUI for GNU Gama project
 Summary(pl.UTF-8):	Oparty na Qt graficzny interfejs do projektu GNU Gama
-Name:		gama-qt
-Version:	1.03
-%define	fver	%(echo %{version} | tr . -)
-%define	gama_ver	2.13
-Release:	2
+Name:		qgama
+Version:	2.08
+%define	gama_ver	2.32
+Release:	1
 License:	GPL v3+
 Group:		Applications/Science
-Source0:	https://ftp.gnu.org/gnu/gama/gama-qt/qt-gama-qt-%{fver}.tar.gz
-# Source0-md5:	0bc18d72824037717582a75863965f66
+Source0:	https://ftp.gnu.org/gnu/gama/qgama/%{name}-%{version}.tar.gz
+# Source0-md5:	79048fab55bcfabd6e55ff8a7266f253
 Source1:	https://ftp.gnu.org/gnu/gama/gama-%{gama_ver}.tar.gz
-# Source1-md5:	bc0f6c70c10bd14663c7033d0a10085b
+# Source1-md5:	93c0b0b13ad802a71a40958f812b0e97
 Patch0:		%{name}-system-expat.patch
+Patch1:		gama-cmake.patch
 URL:		http://www.gnu.org/software/gama/
-BuildRequires:	Qt5Core-devel >= 5
-BuildRequires:	Qt5Gui-devel >= 5
-BuildRequires:	Qt5PrintSupport-devel >= 5
-BuildRequires:	Qt5Sql-devel >= 5
-BuildRequires:	Qt5Svg-devel >= 5
-BuildRequires:	Qt5Widgets-devel >= 5
-BuildRequires:	cmake >= 3.5
+BuildRequires:	Qt6Core-devel >= 6
+BuildRequires:	Qt6Gui-devel >= 6
+BuildRequires:	Qt6PrintSupport-devel >= 6
+BuildRequires:	Qt6Sql-devel >= 6
+BuildRequires:	Qt6Widgets-devel >= 6
+BuildRequires:	cmake >= 3.18
 BuildRequires:	expat-devel
-BuildRequires:	libstdc++-devel >= 6:5
-BuildRequires:	qt5-build >= 5
-BuildRequires:	sed >= 4.0
+BuildRequires:	libstdc++-devel >= 6:7
+BuildRequires:	qt6-build >= 6
 BuildRequires:	sqlite3-devel >= 3
-BuildRequires:	yaml-cpp-devel
+# vendored in gama 2.32
+#BuildRequires:	yaml-cpp-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -43,21 +42,16 @@ precyzyjnych pomiarach inżynierskich), gdzie nie można użyć GPS-a
 (Global Positioning System).
 
 %prep
-%setup -q -n qt-gama-qt-%{fver} -a1
+%setup -q -n qt-qgama-%{version} -a1
 ln -s gama-%{gama_ver} gama
-%patch0 -p1
-
-%define qt5_ver	%(rpm -q Qt5Core-devel)
-%if "%{_ver_lt '%{qt5_ver}' '5.15'}" == "1"
-%{__sed} -i -e 's/Qt::SkipEmptyParts/QString::SkipEmptyParts/' gama-q2/{gamaq2controlpanel,networkadjustmentpanel}.cpp
-%endif
+%patch -P0 -p1
+%patch -P1 -p0
 
 %build
-install -d build
-cd build
-%cmake ..
+%cmake -B build \
+	-DENABLE_EXPAT_1_1=OFF
 
-%{__make}
+%{__make} -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -66,15 +60,16 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 # already in gama
-%{__rm} $RPM_BUILD_ROOT%{_bindir}/gama-{g3,local}
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/{compare-xyz,krumm2gama-local}
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/gama-{g3,local,local-gkf2yaml}
 
-# missing in make install
-install build/gama-q2 $RPM_BUILD_ROOT%{_bindir}
+# make install is broken
+install build/qgama $RPM_BUILD_ROOT%{_bindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc QuickStart.txt
-%attr(755,root,root) %{_bindir}/gama-q2
+%doc ChangeLog.md QuickStart.md README.md
+%attr(755,root,root) %{_bindir}/qgama

@@ -1,0 +1,11 @@
+--- gama/tests/CMakeLists.txt.orig	2024-12-28 15:10:45.278822339 +0100
++++ gama/tests/CMakeLists.txt	2024-12-28 15:10:48.092140432 +0100
+@@ -1,7 +1,7 @@
+ add_subdirectory(gama-local)
+ add_subdirectory(gama-local-deformation)
+ 
+-add_subdirectory(gama-g3)
++# add_subdirectory(gama-g3) missing CMakeLists.txt in dist
+ add_subdirectory(acord2)
+ add_subdirectory(krumm)
+ 

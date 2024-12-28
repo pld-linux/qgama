@@ -1,0 +1,19 @@
+--- qt-qgama-2.08/CMakeLists.txt.orig	2024-11-15 12:18:06.000000000 +0100
++++ qt-qgama-2.08/CMakeLists.txt	2024-12-28 15:05:13.670618815 +0100
+@@ -107,7 +107,6 @@ endif()  # end of CMAKE_PREFIX_PATH sett
+ message("   -- Qgama cmake build CMAKE_PREFIX_PATH: " ${CMAKE_PREFIX_PATH})
+ 
+ 
+-add_definitions(-DGNU_gama_expat_1_1)  # if we use local copy of expat sources
+ include_directories(gama/lib qgama)
+ 
+ find_package(Qt6 COMPONENTS
+@@ -189,7 +188,7 @@ if (WIN32)
+ endif (WIN32)
+ 
+ target_link_libraries(qgama PRIVATE
+-  Qt6::Widgets Qt6::Sql Qt6::PrintSupport Qt6::SvgWidgets)
++  Qt6::Widgets Qt6::Sql Qt6::PrintSupport Qt6::SvgWidgets expat)
+ 
+ # Building with plugins by default. If you don't want to build plugins,
+ # use the following option to disable them
